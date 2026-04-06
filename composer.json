@@ -22,5 +22,11 @@
             "core\\": "core/"
         }
     },
-    "bin": ["nexa"]
+    "bin": ["nexa"],
+    "scripts": {
+        "post-create-project-cmd": [
+            "php -r \"copy('.env.example', '.env');\"",
+            "php nexa key:generate"
+        ]
+    }
 }
