@@ -65,13 +65,29 @@ If you prefer to clone the repository manually for contribution or research:
 
 ### Nexa CLI Commands
 Maximize your productivity with a professional suite of terminal tools:
+
+**General Usage**
+- `php nexa help` -- List all available commands
+- `php nexa about` -- Display framework information
+- `php nexa serve [PORT]` -- Start development server (default: 7272)
+
+**Database & Configuration**
 - `php nexa migrate` -- Apply database migrations
+- `php nexa key:generate` -- Generate application secure key
+- `php nexa env:example` -- Synchronize .env and .env.example
+
+**Scaffolding (Rapid Development)**
 - `php nexa make:controller NAME` -- Scaffold a new controller
 - `php nexa make:model NAME` -- Scaffold a new model
+- `php nexa make:middleware NAME` -- Create a new middleware
+- `php nexa make:migration NAME` -- Create a new migration file
+- `php nexa make:view NAME` -- Create a new view file
+
+**Application Management**
 - `php nexa route:list` -- Map your entire application routes
+- `php nexa clear:logs` -- Delete all log files
 - `php nexa down` -- Enter maintenance mode
 - `php nexa up` -- Exit maintenance mode
-
 ---
 
 ### Project Vision
@@ -81,4 +97,4 @@ Maximize your productivity with a professional suite of terminal tools:
 
 ---
 **NexaPHP — Build faster. Scale smarter.**
-*© 2026 HWeb Technologies. All Rights Reserved.*
+*© 2026 H-Web Technologiees Limited. All Rights Reserved.*
