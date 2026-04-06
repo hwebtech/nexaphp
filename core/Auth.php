@@ -6,6 +6,13 @@ namespace core;
 
 use app\models\User;
 
+/**
+ * NexaPHP Framework Core - Authentication Service
+ * ---
+ * WARNING: DO NOT MODIFY THIS FILE.
+ * Handles user login, logout, and session state.
+ * ---
+ */
 class Auth
 {
     private static ?User $user = null;

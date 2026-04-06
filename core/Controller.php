@@ -2,6 +2,13 @@
 
 namespace core;
 
+/**
+ * NexaPHP Framework Core - Base Controller
+ * ---
+ * WARNING: DO NOT MODIFY THIS FILE.
+ * Base class for all application controllers.
+ * ---
+ */
 class Controller
 {
     public string $layout = 'main';

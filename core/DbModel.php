@@ -2,6 +2,13 @@
 
 namespace core;
 
+/**
+ * NexaPHP Framework Core - Database Model (Active Record)
+ * ---
+ * WARNING: DO NOT MODIFY THIS FILE.
+ * Provides abstracted database interactions for all application models.
+ * ---
+ */
 abstract class DbModel extends Model
 {
     public int $id = 0;

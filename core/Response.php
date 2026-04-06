@@ -2,6 +2,13 @@
 
 namespace core;
 
+/**
+ * NexaPHP Framework Core - Response Object
+ * ---
+ * WARNING: DO NOT MODIFY THIS FILE.
+ * Handles headers, redirects, JSON rendering, and HTML output.
+ * ---
+ */
 class Response
 {
     private int $statusCode = 200;

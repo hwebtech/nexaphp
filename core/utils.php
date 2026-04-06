@@ -1,10 +1,23 @@
 <?php
-
+/**
+ * NexaPHP Framework Core - Global Helpers
+ * ---
+ * WARNING: DO NOT MODIFY THIS FILE.
+ * Global helper functions for the NexaPHP framework.
+ * ---
+ */
 use core\Application;
+use core\Auth;
 
 if (!function_exists('app')) {
     function app(): Application {
         return Application::$app;
+    }
+}
+
+if (!function_exists('auth')) {
+    function auth() {
+        return Auth::class;
     }
 }
 

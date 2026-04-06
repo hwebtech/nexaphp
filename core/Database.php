@@ -8,6 +8,13 @@ use PDO;
 use PDOStatement;
 use Throwable;
 
+/**
+ * NexaPHP Framework Core - Database Engine
+ * ---
+ * WARNING: DO NOT MODIFY THIS FILE.
+ * Provides SQLite, MySQL, and PostgreSQL support with Query Builder.
+ * ---
+ */
 class Database
 {
     public readonly PDO $pdo;
@@ -115,6 +122,45 @@ class Database
         $this->limit(1);
         $res = $this->get();
         return $res[0] ?? false;
+    }
+
+    public function find($id, string $primaryKey = 'id'): array|bool
+    {
+        return $this->where($primaryKey, $id)->first();
+    }
+
+    public function insert(array $data): bool
+    {
+        $columns = implode(', ', array_keys($data));
+        $placeholders = implode(', ', array_fill(0, count($data), '?'));
+        $sql = "INSERT INTO {$this->table} ($columns) VALUES ($placeholders)";
+        
+        $this->query($sql, array_values($data));
+        return true;
+    }
+
+    public function update(array $data): bool
+    {
+        $set = implode(', ', array_map(fn($col) => "$col = ?", array_keys($data)));
+        $sql = "UPDATE {$this->table} SET $set";
+        
+        if (!empty($this->wheres)) {
+            $sql .= " WHERE " . implode(' AND ', $this->wheres);
+        }
+
+        $this->query($sql, array_merge(array_values($data), $this->params));
+        return true;
+    }
+
+    public function delete(): bool
+    {
+        $sql = "DELETE FROM {$this->table}";
+        if (!empty($this->wheres)) {
+            $sql .= " WHERE " . implode(' AND ', $this->wheres);
+        }
+
+        $this->query($sql, $this->params);
+        return true;
     }
 
     /**

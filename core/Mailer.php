@@ -5,6 +5,13 @@ namespace core;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception as PHPMailException;
 
+/**
+ * NexaPHP Framework Core - Mail Service
+ * ---
+ * WARNING: DO NOT MODIFY THIS FILE.
+ * Integrates PHPMailer and local mail for standard application emails.
+ * ---
+ */
 class Mailer
 {
     private array $config;

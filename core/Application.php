@@ -6,6 +6,13 @@ namespace core;
 
 use Throwable;
 
+/**
+ * NexaPHP Framework Core - Application Class
+ * ---
+ * WARNING: DO NOT MODIFY THIS FILE.
+ * This file bootstraps the NexaPHP kernel.
+ * ---
+ */
 class Application
 {
     public static string $ROOT_DIR;

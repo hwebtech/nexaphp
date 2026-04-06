@@ -2,6 +2,13 @@
 
 namespace core;
 
+/**
+ * NexaPHP Framework Core - Request Object
+ * ---
+ * WARNING: DO NOT MODIFY THIS FILE.
+ * Standardizes incoming HTTP data and URL parameters.
+ * ---
+ */
 class Request
 {
     private array $routeParams = [];

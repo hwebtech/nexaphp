@@ -7,6 +7,14 @@ namespace core;
 use Exception;
 use Throwable;
 
+/**
+ * NexaPHP Framework Core - Router Class
+ * ---
+ * WARNING: DO NOT MODIFY THIS FILE.
+ * Any changes will be lost during framework updates.
+ * For application logic, use controllers, routes, and views in the /app folder.
+ * ---
+ */
 class Router
 {
     public Request $request;

@@ -2,6 +2,13 @@
 
 namespace core;
 
+/**
+ * NexaPHP Framework Core - Session Manager
+ * ---
+ * WARNING: DO NOT MODIFY THIS FILE.
+ * Securely manages PHP sessions and Flash messages.
+ * ---
+ */
 class Session
 {
     protected const FLASH_KEY = 'flash_messages';
