@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.png" alt="NexaPHP Logo" width="350">
+</p>
+
 # NexaPHP Framework
 > **"Build Fast. Scale Limitlessly."**
 
