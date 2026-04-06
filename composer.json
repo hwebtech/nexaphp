@@ -1,0 +1,25 @@
+{
+    "name": "nexaphp/framework",
+    "description": "NexaPHP Framework — Build Fast. Scale Limitlessly.",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nexa Developers"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "vlucas/phpdotenv": "^5.5",
+        "phpmailer/phpmailer": "^6.8",
+        "dompdf/dompdf": "^2.0",
+        "league/csv": "^9.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "app\\": "app/",
+            "core\\": "core/"
+        }
+    },
+    "bin": ["nexa"]
+}

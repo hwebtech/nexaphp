@@ -1,0 +1,21 @@
+# HWeb Framework - Secure Gateway
+
+Options -Indexes
+RewriteEngine On
+
+# 1. Deny access to sensitive files
+<FilesMatch "^\.env|composer\.(json|lock|phar)|hweb|README\.md|config\.php|migrations\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# 2. Deny access to core framework directories
+RewriteRule ^(app|core|migrations|routes|vendor|tmp|storage)/.*$ - [F,L]
+
+# 3. Allow access to assets and index.php ONLY
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# 4. Handle assets/ directory
+RewriteRule ^assets/(.*)$ assets/$1 [L]

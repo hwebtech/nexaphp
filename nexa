@@ -1,0 +1,167 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+$rootDir = __DIR__;
+
+// Load Composer Autoloader
+$autoload = $rootDir . '/vendor/autoload.php';
+if (file_exists($autoload)) {
+    require_once $autoload;
+}
+
+require_once $rootDir . '/core/Application.php';
+require_once $rootDir . '/core/DotEnv.php';
+require_once $rootDir . '/core/utils.php';
+
+// Fallback manual autoloader for Nexa internal classes
+spl_autoload_register(function ($class) use ($rootDir) {
+    if (class_exists($class, false)) return;
+    $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
+    $file = $rootDir . DIRECTORY_SEPARATOR . $class . '.php';
+    if (file_exists($file)) {
+        require_once $file;
+    }
+});
+
+use core\Application;
+
+(new \core\DotEnv($rootDir . '/.env'))->load();
+
+$config = require $rootDir . '/config.php';
+$app = new Application($rootDir, $config);
+
+// CLI Command logic
+$command = $argv[1] ?? 'help';
+
+switch ($command) {
+    case 'migrate':
+        $app->db->applyMigrations();
+        break;
+
+    case 'make:controller':
+        $name = $argv[2] ?? null;
+        if (!$name) die("Error: Provide a controller name.\n");
+        createFile('app/controllers', $name, 'Controller', "<?php\n\nnamespace app\\controllers;\n\nuse core\\Controller;\n\nclass $name extends Controller\n{\n    public function index()\n    {\n        return \$this->render('index');\n    }\n}\n");
+        break;
+
+    case 'make:model':
+        $name = $argv[2] ?? null;
+        if (!$name) die("Error: Provide a model name.\n");
+        $table = strtolower($name) . 's';
+        createFile('app/models', $name, '', "<?php\n\nnamespace app\\models;\n\nuse core\\DbModel;\n\nclass $name extends DbModel\n{\n    public static function tableName(): string { return '$table'; }\n    public function attributes(): array { return []; }\n    public function rules(): array { return []; }\n    public static function primaryKey(): string { return 'id'; }\n}\n");
+        break;
+
+    case 'make:middleware':
+        $name = $argv[2] ?? null;
+        if (!$name) die("Error: Provide a middleware name.\n");
+        createFile('app/middlewares', $name, 'Middleware', "<?php\n\nnamespace app\\middlewares;\n\nuse core\\Request;\n\nclass $name\n{\n    public function handle(Request \$request, \$next)\n    {\n        // Your logic here\n        return \$next(\$request);\n    }\n}\n");
+        break;
+
+    case 'make:view':
+        $name = $argv[2] ?? null;
+        if (!$name) die("Error: Provide a view name.\n");
+        $path = $rootDir . "/app/views/$name.php";
+        if (file_exists($path)) die("Error: View $name already exists.\n");
+        if (!is_dir(dirname($path))) @mkdir(dirname($path), 0775, true);
+        file_put_contents($path, "<?php\n/** @var \$this \\core\\View */\n?>\n\n<h1>$name View</h1>\n");
+        echo "Created: app/views/$name.php\n";
+        break;
+
+    case 'make:migration':
+        $name = $argv[2] ?? null;
+        if (!$name) die("Error: Provide a migration name.\n");
+        $timestamp = date('Ymd_His');
+        $filename = "m{$timestamp}_{$name}";
+        createFile('migrations', $filename, '', "<?php\n\nuse core\\Application;\n\nclass $filename\n{\n    public function up()\n    {\n        \$db = Application::\$app->db;\n        \$sql = \"CREATE TABLE $name (id INT AUTO_INCREMENT PRIMARY KEY)\";\n        \$db->pdo->exec(\$sql);\n    }\n\n    public function down()\n    {\n        \$db = Application::\$app->db;\n        \$sql = \"DROP TABLE $name\";\n        \$db->pdo->exec(\$sql);\n    }\n}\n");
+        break;
+
+    case 'route:list':
+        echo "\nRegistered Routes:\n";
+        foreach ($app->router->getRoutes() as $method => $routes) {
+            foreach ($routes as $path => $callback) {
+                $cbText = is_string($callback) ? $callback : (is_array($callback) ? implode('@', $callback) : 'Closure');
+                printf("  %-8s %-30s %s\n", strtoupper($method), $path, $cbText);
+            }
+        }
+        break;
+
+    case 'key:generate':
+        $key = base64_encode(random_bytes(32));
+        $env = file_get_contents($rootDir . '/.env');
+        if (strpos($env, 'APP_KEY=') === false) $env .= "\nAPP_KEY=$key";
+        else $env = preg_replace('/APP_KEY=.*/', "APP_KEY=$key", $env);
+        file_put_contents($rootDir . '/.env', $env);
+        echo "Application key generated successfully: $key\n";
+        break;
+
+    case 'clear:logs':
+        $files = glob($rootDir . '/storage/logs/*.log');
+        foreach ($files as $file) unlink($file);
+        echo "All application logs cleared.\n";
+        break;
+
+    case 'down':
+        file_put_contents($rootDir . '/storage/framework/down', json_encode(['time' => time()]));
+        echo "Application is now in maintenance mode.\n";
+        break;
+
+    case 'up':
+        if (file_exists($rootDir . '/storage/framework/down')) unlink($rootDir . '/storage/framework/down');
+        echo "Application is now active.\n";
+        break;
+
+    case 'env:example':
+        $env = file_get_contents($rootDir . '/.env');
+        $example = preg_replace('/=.*$/m', '=', $env);
+        file_put_contents($rootDir . '/.env.example', $example);
+        echo "Environment example file synchronized.\n";
+        break;
+
+    case 'about':
+        echo "\nNexaPHP Framework v1.0.0\n";
+        echo "PHP Version: " . PHP_VERSION . "\n";
+        echo "Environment: " . env('APP_ENV', 'local') . "\n";
+        echo "Debug Mode: " . (env('APP_DEBUG') ? 'Enabled' : 'Disabled') . "\n";
+        echo "Database: " . env('DB_CONNECTION', 'sqlite') . "\n";
+        break;
+
+    case 'serve':
+        $port = $argv[2] ?? 7272;
+        echo "\nNexaPHP Framework -- Build Fast. Scale Limitlessly.\n";
+        echo "Development server: http://localhost:$port\n";
+        passthru("php -S localhost:$port index.php");
+        break;
+
+    case 'help':
+    default:
+        echo "\nNexaPHP CLI v1.0.0\n";
+        echo "Usage: php nexa [command] [args]\n\n";
+        echo "Commands:\n";
+        echo "  migrate                Apply database migrations\n";
+        echo "  make:controller NAME   Create a new controller\n";
+        echo "  make:model NAME        Create a new model\n";
+        echo "  make:middleware NAME   Create a new middleware\n";
+        echo "  make:migration NAME    Create a new migration file\n";
+        echo "  make:view NAME         Create a new view file\n";
+        echo "  route:list             List all registered routes\n";
+        echo "  key:generate           Generate application secure key\n";
+        echo "  clear:logs             Delete all log files\n";
+        echo "  down                   Enter maintenance mode\n";
+        echo "  up                     Exit maintenance mode\n";
+        echo "  env:example            Synchronize .env and .env.example\n";
+        echo "  about                  Display framework information\n";
+        echo "  serve [PORT]           Start development server\n";
+        break;
+}
+
+function createFile($dir, $name, $suffix, $content) {
+    global $rootDir;
+    if ($suffix && strpos($name, $suffix) === false) $name .= $suffix;
+    $path = "$rootDir/$dir/$name.php";
+    if (!is_dir(dirname($path))) @mkdir(dirname($path), 0775, true);
+    if (file_exists($path)) die("Error: File $name already exists.\n");
+    file_put_contents($path, $content);
+    echo "Created: $dir/$name.php\n";
+}

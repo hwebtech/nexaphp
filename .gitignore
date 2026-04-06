@@ -1,0 +1,9 @@
+# NexaPHP Git Ignore
+/vendor/
+/.env
+/storage/logs/*.log
+/storage/db/*.sqlite
+/storage/framework/down
+.DS_Store
+.idea/
+.vscode/
