@@ -1,15 +1,12 @@
 {
-<<<<<<< HEAD
     "name": "hwebtech/nexa",
-=======
-    "name": "hwebtech/nexaphp",
->>>>>>> 349289d85d7ab09e04bc99d574b9389b4cf8ee62
     "description": "NexaPHP Framework — Build Fast. Scale Limitlessly.",
     "type": "project",
     "license": "MIT",
     "authors": [
         {
-            "name": "Nexa Developers"
+            "name": "CODEBYHWEB",
+            "role": "Lead Developer"
         }
     ],
     "require": {
