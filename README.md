@@ -9,6 +9,7 @@ NexaPHP is a next-generation, high-speed PHP framework designed for modern, scal
 To start a new NexaPHP project instantly, run:
 
 ```bash
+
 composer create-project hwebtech/nexaphp my-new-app
 ```
 
