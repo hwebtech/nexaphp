@@ -34,7 +34,7 @@ class Router
         $this->response->header('X-Frame-Options', 'DENY');
         $this->response->header('X-XSS-Protection', '1; mode=block');
         $this->response->header('Referrer-Policy', 'strict-origin-when-cross-origin');
-        $this->response->header('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';");
+        $this->response->header('Content-Security-Policy', "default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' https: data:; connect-src 'self' https:;");
         
         if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
             $this->response->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
